@@ -21,7 +21,7 @@ from pymatgen.analysis.diffraction.xrd import XRDCalculator
 
 
 #######Put your own API key in########
-api_key = MPRester("DeEoRraGSuiMPIdq")
+api_key = MPRester("ADD YOUR KEY HERE")
 ######################################
 
 
