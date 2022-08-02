@@ -9,7 +9,7 @@ The repository is divided in sections dedicated to specific areas with the follo
  - Spectra:
    - Roughly estimate the band gap from a diffuse reflectance spectrum,
    - (soon) Search PhotoChemCAD database for adequate compounds to comparatvely estimate quantum yields.
- - (soon) Diffraction:
+ - Diffraction:
    - X-ray diffraction plotter with the possibility of using the Materials Project API to fetch the available patterns as comparison.
  - (soon) Image:
    - Create a plot of the red, green and blue pixel color average values of a sequence of images, captured during the synthesis of materials in an Anton Paar Monowave 400 microwave reactor.
