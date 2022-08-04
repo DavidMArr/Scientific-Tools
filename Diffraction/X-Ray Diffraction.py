@@ -18,6 +18,7 @@ from json import loads
 # pip install pymatgen
 from pymatgen.ext.matproj import MPRester
 from pymatgen.analysis.diffraction.xrd import XRDCalculator
+import gc # Required ot clean the patterns variable if the user does not want to accumulate (stack) patterns
 
 
 #######Put your own API key in########
@@ -74,9 +75,10 @@ def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria
     
     global patterns
     
-    if len(data_labels) < len(data_list):
-        for i in range(1+len(data_list)-len(data_labels)):
-            data_labels.append(str(len(data_labels)+i))
+    if (not stack_patterns and len(patterns) > 1) or len(patterns) == 0:
+        del(patterns)
+        gc.collect()
+        patterns = [["Material id", "Formula", "Spacegroup", "Crystal system", "X-ray diffraction pattern", "Band gap/eV", "Final energy/eV", "Density (atomic)", "Density/(g/cm3)", "Metal's atomic weight/(g/mol)"]]
     
     if element_criteria != None and type(element_criteria) is list:
         criteria = dict({"elements":{"$all":element_criteria},"nelements":len(element_criteria)}, **criteria_add if criteria_add != None else {})
