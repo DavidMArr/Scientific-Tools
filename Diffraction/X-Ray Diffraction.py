@@ -171,7 +171,7 @@ def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria
                         plt.rcParams.update({'font.size': 7/0.75})
                         axs[mm].bar(x, np.ones(len(y))-y*0.5, bottom = y*0.5,
                                     #color=[material_id_color[m], material_id_color[m], material_id_color[m]],
-                                    color=[1, 0, 0, 0.15],
+                                    color=[0.99, 0, 0, 0.15],
                                     width = 0.5)
                         if stretch_references:
                             if selected != None:
@@ -187,7 +187,7 @@ def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria
                         axs[mm].plot(sx,sy*0.5+0.5, "k", zorder=0)
                         axs[mm].bar(x, y*0.5, bottom = 0,
                                     #color=[material_id_color[m], material_id_color[m], material_id_color[m]],
-                                    color=[1, 0, 0, 1],
+                                    color=[0.99, 0, 0, 1],
                                     width = 0.5)
                         axs[mm].annotate(text = material_id_list[m], xy = (annotate_x,
                                                                            0.90), ha=annotate_position, annotation_clip=False)
