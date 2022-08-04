@@ -30,7 +30,7 @@ api_key = MPRester("ADD YOUR KEY HERE")
 patterns = [["Material id", "Formula", "Spacegroup", "Crystal system", "X-ray diffraction pattern", "Band gap/eV", "Final energy/eV", "Density (atomic)", "Density/(g/cm3)", "Metal's atomic weight/(g/mol)"]]
 
 
-def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria = ["Fe", "S"], criteria_add = {'nsites': {'$lt': 1000000}, "theoretical": False}, data_labels : list = [], selected = 1, xlim = [10,90], stretch_references = False, stretch_thresh = 10, axis_width = 70, axis_height = 20):
+def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria = ["Fe", "S"], criteria_add = {'nsites': {'$lt': 1000000}, "theoretical": False}, data_labels : list = [], selected = 1, xlim = [10,90], stretch_references = False, stretch_thresh = 10, stack_patterns = False, axis_width = 70, axis_height = 20):
     """
     Description
     -------
