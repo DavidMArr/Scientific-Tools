@@ -30,7 +30,7 @@ api_key = MPRester("ADD YOUR KEY HERE")
 patterns = [["Material id", "Formula", "Spacegroup", "Crystal system", "X-ray diffraction pattern", "Band gap/eV", "Final energy/eV", "Density (atomic)", "Density/(g/cm3)", "Metal's atomic weight/(g/mol)"]]
 
 
-def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria = ["Fe", "S"], criteria_add = {'nsites': {'$lt': 1000000}, "theoretical": False}, data_labels : list = [], selected = 1, xlim = [10,90], stretch_references = False, stretch_thresh = 10, stack_patterns = False, axis_width = 70, axis_height = 20):
+def XRD_PLOTTER(data_list : list, material_id_list = None, element_criteria = ["Fe", "S"], criteria_add = {'nsites': {'$lt': 1000000}, "theoretical": False}, data_labels : list = [], selected = 1, xlim = [10,90], stretch_references = True, mark_references = False, mark_thresh = 10, stack_patterns = False, axis_width = 70, axis_height = 20):
     """
     Description
     -------
@@ -42,12 +42,13 @@ def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria
         List of data with the following example format: [[x1, y1], [x2, y2], ...].
         XRDAnalysis.py supplies a read_csv definition for CENIMAT (NOVA School of Science and Technology) XRD patterns. If a file is used, it will automatically assume read_csv is to be used on it.
     material_id_list : list
-        List of material_id_list. Leave list empty if you prefer to generate a list of IDs based on the following arguments. It can also be generated with the following example, which yields the materials sorted based on formation_energy_per_atom from the lowest value (negative) to the highest:
+        List of material_id_list. Leave as None if you prefer to generate a list of IDs based on the following arguments. It can also be generated with the following example, which yields the materials sorted based on formation_energy_per_atom from the lowest value (negative) to the highest:
             entries          = entries_chemsys(['In', 'Sn', 'S'])
             energy_per_atom  = [a["formation_energy_per_atom"] for a in entries if a["nelements"] > 1]
             material_ids     = [a["material_id"] for a in entries if a["nelements"] > 1]
             material_id_list = [x for _,x in sorted(zip(energy_per_atom, material_ids), reverse=False)]
         or/and using the argument elements.
+        Otherwise, use the x-ray diffraction patterns from JSON files from materialsproject; list of files.
     element_criteria : list
         List of elements to generate a list of "material_id" that includes X-ray diffraction patterns.
     criteria_add : dict
@@ -59,8 +60,10 @@ def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria
     xlim : list
         Limits for the x axis (2 theta).
     stretch_references : bool
+        Defines if the bars from the references stretch all the way to the top of the sample pattern.
+    mark_references : bool
         The plotted bars from the references that were imported from materialsproject database will color the selected plot for each value.
-    stretch_thresh : int
+    mark_thresh : int
         The colorizing of the selected plot based on the references values is extended to the sides with this argument.
     
     Returns
@@ -72,6 +75,9 @@ def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria
     XRD_PLOTTER(['E:/Work/PhD/Data/Particles/Bi/Bi(NO3)3-DDCT-mwave-185-6min10s/XRD/DJ.csv'], [], ["Bi"], criteria_add = {'nsites': {'$lt': 10000}}, data_labels = ["Bi(NO3)3-DDCT-mwave-185-6min10s"])
     """
     dif = (xlim[1] - xlim[0])*1.05
+    
+    if material_id_list == None or material_id_list == []:
+        material_id_list = []
     
     global patterns
     
@@ -171,19 +177,20 @@ def XRD_PLOTTER(data_list : list, material_id_list : list = [], element_criteria
                         y = [pattern.y[i] for i in range(len(pattern.x)) if pattern.x[i] <= xlim[1] and pattern.x[i] >= xlim[0]]
                         y = normalize(y)
                         plt.rcParams.update({'font.size': 7/0.75})
-                        axs[mm].bar(x, np.ones(len(y))-y*0.5, bottom = y*0.5,
-                                    #color=[material_id_color[m], material_id_color[m], material_id_color[m]],
-                                    color=[0.99, 0, 0, 0.15],
-                                    width = 0.5)
                         if stretch_references:
+                            axs[mm].bar(x, np.ones(len(y))-y*0.5, bottom = y*0.5,
+                                        #color=[material_id_color[m], material_id_color[m], material_id_color[m]],
+                                        color=[0.99, 0, 0, 0.15],
+                                        width = 0.5)
+                        if mark_references:
                             if selected != None:
                                 colors = np.zeros(len(sx))
                                 for i in x:
-                                    if min(sx[stretch_thresh:]) < i < max(sx[:len(sx)-stretch_thresh-1]):
+                                    if min(sx[mark_thresh:]) < i < max(sx[:len(sx)-mark_thresh-1]):
                                         for j in range(len(sx)):
-                                            if sx[int(max(j-stretch_thresh, 0))] <= i <= sx[int(min(j+stretch_thresh,len(sx)-1))]:
-                                                size = len(colors[int(max(j-stretch_thresh, 0)):int(min(j+stretch_thresh,len(sx)))+1])
-                                                colors[int(max(j-stretch_thresh, 0)):int(min(j+stretch_thresh,len(sx)))+1] = np.ones(size)
+                                            if sx[int(max(j-mark_thresh, 0))] <= i <= sx[int(min(j+mark_thresh,len(sx)-1))]:
+                                                size = len(colors[int(max(j-mark_thresh, 0)):int(min(j+mark_thresh,len(sx)))+1])
+                                                colors[int(max(j-mark_thresh, 0)):int(min(j+mark_thresh,len(sx)))+1] = np.ones(size)
                                 colors = [[i-0.02 if i == 1 else 0,0,0] for i in colors]
                                 axs[mm].scatter(sx,sy*0.5+0.5, c=colors, s=1, zorder=1)
                         axs[mm].plot(sx,sy*0.5+0.5, "k", zorder=0)
