@@ -18,7 +18,7 @@ from json import loads
 # pip install pymatgen
 from pymatgen.ext.matproj import MPRester
 from pymatgen.analysis.diffraction.xrd import XRDCalculator
-import gc # Required ot clean the patterns variable if the user does not want to accumulate (stack) patterns
+import gc # Required to clean the patterns variable if the user does not want to accumulate (stack) patterns
 
 
 #######Put your own API key in########
