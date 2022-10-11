@@ -5,6 +5,7 @@ Anything that is found here is completely free to use, change, sell, fork... etc
 Feel free to submit any corrections or suggestions. They are welcome and appreciated.
 
 The repository is divided in sections dedicated to specific areas with the following scripts:
+WARNING: The scripts were heavilly modified and will be changed here when I am able to do so.
 
  - Spectra:
    - Roughly estimate the band gap from a diffuse reflectance spectrum,
